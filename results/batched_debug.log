@@ -1,0 +1,23 @@
+# LLAMA_BATCH_DEBUG=1 llama-batched -v -p "Hello my name is" -np 2 --kv-unified (first 3 batches)
+
+--- batch 1 ---
+0: id = 128000 (<|begin_of_text|>), pos =    0, n_seq_id =  2, seq_id = [01], output = 0
+1: id =   9906 (           Hello), pos =    1, n_seq_id =  2, seq_id = [01], output = 0
+2: id =    856 (              my), pos =    2, n_seq_id =  2, seq_id = [01], output = 0
+3: id =    836 (            name), pos =    3, n_seq_id =  2, seq_id = [01], output = 0
+4: id =    374 (              is), pos =    4, n_seq_id =  2, seq_id = [01], output = 1
+0: id = 128000 (<|begin_of_text|>), pos =    0, n_seq_id =  2, seq_id = [01], output = 0
+1: id =   9906 (           Hello), pos =    1, n_seq_id =  2, seq_id = [01], output = 0
+2: id =    856 (              my), pos =    2, n_seq_id =  2, seq_id = [01], output = 0
+3: id =    836 (            name), pos =    3, n_seq_id =  2, seq_id = [01], output = 0
+4: id =    374 (              is), pos =    4, n_seq_id =  2, seq_id = [01], output = 1
+--- batch 2 ---
+0: id =  79663 (           Sofia), pos =    5, n_seq_id =  1, seq_id = [0.], output = 1
+1: id =  14596 (             Bob), pos =    5, n_seq_id =  1, seq_id = [.1], output = 1
+0: id =  79663 (           Sofia), pos =    5, n_seq_id =  1, seq_id = [0.], output = 1
+1: id =  14596 (             Bob), pos =    5, n_seq_id =  1, seq_id = [.1], output = 1
+--- batch 3 ---
+0: id =    323 (             and), pos =    6, n_seq_id =  1, seq_id = [0.], output = 1
+1: id =    323 (             and), pos =    6, n_seq_id =  1, seq_id = [.1], output = 1
+0: id =    323 (             and), pos =    6, n_seq_id =  1, seq_id = [0.], output = 1
+1: id =    323 (             and), pos =    6, n_seq_id =  1, seq_id = [.1], output = 1

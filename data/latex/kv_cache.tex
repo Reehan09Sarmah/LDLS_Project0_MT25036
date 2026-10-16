@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{amsmath,amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\title{Sizing the KV Cache of a Decoder-Only Transformer}
+\author{LDLS Notes}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+During generation a transformer stores the keys and values of every past token so that they are not recomputed.
+This note derives the size of that cache, specialises it to grouped-query attention, and explains why eviction is needed.
+\end{abstract}
+
+\section{Setting}
+A decoder-only model has $N_{\text{layers}}$ layers. In every layer each token produces a key and a value vector for each key-value head.
+We write $N_{KV}$ for the number of key-value heads, $d_{\text{head}}$ for the head dimension and $b$ for the bytes used per number.
+
+\begin{definition}
+The \emph{KV cache} of a sequence of $L$ tokens is the collection of all key and value vectors produced by those tokens in all layers.
+\end{definition}
+
+\section{The size formula}
+\begin{theorem}\label{thm:size}
+The KV cache of $L$ tokens occupies $M_{KV} = 2 \, L \, N_{\text{layers}} \, N_{KV} \, d_{\text{head}} \, b$ bytes.
+\end{theorem}
+\begin{proof}
+Each token contributes one key and one value, which gives the factor $2$.
+In one layer a key holds $N_{KV}$ heads of $d_{\text{head}}$ numbers, so it has $N_{KV} d_{\text{head}}$ numbers, and so does a value.
+Every layer stores its own pair, which multiplies by $N_{\text{layers}}$, and every number takes $b$ bytes.
+Multiplying over $L$ tokens gives the formula.
+\end{proof}
+
+\begin{corollary}
+For Llama-3.2-1B ($N_{\text{layers}} = 16$, $N_{KV} = 8$, $d_{\text{head}} = 64$, $b = 2$) one token costs $32\,768$ bytes, that is 32 KiB.
+\end{corollary}
+\begin{proof}
+$2 \cdot 16 \cdot 8 \cdot 64 \cdot 2 = 32\,768$.
+\end{proof}
+
+\section{Grouped-query attention}
+With multi-head attention every query head has its own key-value head. Grouped-query attention lets several query heads share one key-value head.
+Llama-3.2-1B has 32 query heads but only 8 key-value heads, so its cache is four times smaller than with multi-head attention.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{rr}
+Tokens & KV memory \\
+\hline
+100 & 3.1 MiB \\
+1000 & 31.3 MiB \\
+2000 & 62.5 MiB \\
+\end{tabular}
+\caption{KV memory of Llama-3.2-1B in 16-bit precision.}
+\end{table}
+
+\section{Why eviction is needed}
+The cache grows with every token and with every concurrent request, while accelerator memory is fixed.
+When memory runs out a server must evict cached tokens and later recompute them if they are needed again.
+Evicting a whole unit, such as one section of a document, frees exactly that unit's share of the formula above.
+
+\end{document}

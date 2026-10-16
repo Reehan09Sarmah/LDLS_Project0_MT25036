@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath,amsthm}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\title{The Roofline Model in One Page}
+\begin{document}
+\maketitle
+
+\section{Two limits}
+A kernel is limited either by arithmetic or by moving bytes.
+The roofline model compares the two limits for one machine and one kernel.
+
+\subsection{Machine parameters}
+Let $P$ be the peak arithmetic throughput in FLOP/s and $B$ the memory bandwidth in bytes/s.
+
+\subsection{Kernel parameters}
+\begin{definition}
+The \emph{arithmetic intensity} of a kernel is $I = F / Q$, where $F$ is the number of floating-point operations and $Q$ the number of bytes moved to and from memory.
+\end{definition}
+
+\section{The bound}
+\begin{proposition}
+The attainable throughput of a kernel is at most $\min(P, I \cdot B)$.
+\end{proposition}
+\begin{proof}
+The kernel cannot exceed the peak $P$. Moving $Q$ bytes takes at least $Q / B$ seconds, so the $F$ operations run at most at $F / (Q/B) = I \cdot B$ operations per second.
+\end{proof}
+
+The two limits meet at the ridge point $I^\ast = P / B$. Kernels with $I < I^\ast$ are memory-bound and kernels with $I > I^\ast$ are compute-bound.
+
+\section{Typical kernels}
+\begin{table}[h]
+\centering
+\begin{tabular}{lr}
+Kernel & Intensity (FLOP/byte) \\
+\hline
+Vector addition & 0.08 \\
+Softmax & about 1 \\
+Matrix multiply, large & hundreds \\
+Single-token decode & about 1 \\
+\end{tabular}
+\caption{Approximate arithmetic intensity in 16-bit precision.}
+\end{table}
+
+\section{Prefill versus decode}
+Prefill multiplies every loaded weight into many tokens, so its intensity is high and it is compute-bound.
+Decode generates one token at a time, reads every weight once per token and is memory-bound, which is why smaller weights make decode faster.
+
+\end{document}

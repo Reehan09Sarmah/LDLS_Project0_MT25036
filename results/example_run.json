@@ -1,0 +1,21 @@
+{
+ "answer_after_edit": " The library closes at 6 pm on Sundays",
+ "answer_after_evict": " The library closes at 6 pm on Sundays",
+ "answer_before": " The library closes at 6 pm on Sundays",
+ "ask_ms": 1053.1808770000935,
+ "edit_ms": 1192.5645599998534,
+ "evict_ms": 0.025088001042604446,
+ "evict_position_range": [
+  36,
+  67
+ ],
+ "evict_seq_ids": [
+  3
+ ],
+ "evicted_tokens": 31,
+ "kv_bytes_freed": 1016180,
+ "kv_state_bytes": 6720821,
+ "max_logit_diff_edit": 0.0,
+ "max_logit_diff_evict": 0.0,
+ "prefill_ms": 3387.1568919997662
+}

@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{amsmath,amsthm}
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\title{Online Softmax and the Decomposability of Attention}
+\begin{document}
+\maketitle
+
+\section{Softmax over a stream}
+Attention computes a softmax over the scores $s_1, \dots, s_N$ of one query against $N$ keys and averages the values $v_j$ with these weights.
+A naive implementation stores all scores before normalising. The online method processes the scores in blocks and keeps a small running state.
+
+\begin{definition}
+For a block $B$ of keys define the state $(m_B, \ell_B, o_B)$ with $m_B = \max_{j \in B} s_j$, $\ell_B = \sum_{j \in B} e^{s_j - m_B}$ and $o_B = \sum_{j \in B} e^{s_j - m_B} v_j$.
+\end{definition}
+
+% \section{An unfinished section that is commented out}
+
+\section{Merging two states}
+\begin{lemma}\label{lem:merge}
+For disjoint blocks $A$ and $B$, with $m = \max(m_A, m_B)$, the state of $A \cup B$ is
+$\ell = e^{m_A - m}\ell_A + e^{m_B - m}\ell_B$ and $o = e^{m_A - m} o_A + e^{m_B - m} o_B$.
+\end{lemma}
+\begin{proof}[Proof of Lemma~\ref{lem:merge}]
+Every term of $\ell_A$ has the form $e^{s_j - m_A}$. Multiplying by $e^{m_A - m}$ turns it into $e^{s_j - m}$, and the same holds for $B$.
+The sum over $A \cup B$ is therefore the sum of the rescaled block sums. The argument for $o$ is identical, with each term multiplied by $v_j$.
+\end{proof}
+
+The merge is associative and commutative, so blocks can be combined in any order.
+
+\section{Exactness}
+\begin{theorem}
+For any partition of the keys into blocks, merging the block states and returning $o / \ell$ gives exactly the softmax-weighted average of the values.
+\end{theorem}
+\begin{proof}
+By the lemma, repeated merging yields the state of the whole key set.
+For that state $o / \ell = \sum_j e^{s_j - m} v_j / \sum_j e^{s_j - m}$, and the factor $e^{-m}$ cancels, which is the softmax average.
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\fbox{query tile $\times$ key tiles $\rightarrow$ running $(m, \ell, o)$}
+\caption{Tiling: each key tile updates the running state once.}
+\end{figure}
+
+\section*{Consequences}
+FlashAttention uses this identity to tile attention in fast on-chip memory.
+Flash-Decoding splits the keys across parallel workers, and PagedAttention reads keys from scattered memory pages.
+All three are exact because of the lemma.
+
+\end{document}

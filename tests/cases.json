@@ -1,0 +1,82 @@
+[
+ {
+  "doc": "data/markdown/embedding.json",
+  "ask_node": 6,
+  "question": "What does the value 2 of --embd-normalize mean?",
+  "edit_node": 3,
+  "edit_text": "### Unix-based systems (Linux, macOS, etc.):\n\n```bash\n./llama-embedding -m ./path/to/model --pooling mean --log-disable -p \"Hello World!\" 2>/dev/null\n```\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 9
+ },
+ {
+  "doc": "data/markdown/llguidance.json",
+  "ask_node": 4,
+  "question": "How long does computing a token mask take?",
+  "edit_node": 2,
+  "edit_text": "## Building\n\nTo enable LLGuidance support, build llama.cpp with the `LLAMA_LLGUIDANCE` option:\n\n```sh\ncmake -B build -DLLAMA_LLGUIDANCE=ON\nmake -C build -j\n```\n\nFor Windows use `cmake --build build --config Release` instead of `make`.\n\nThis requires the Rust compiler and the `cargo` tool to be [installed](https://www.rust-lang.org/tools/install).\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 6
+ },
+ {
+  "doc": "data/markdown/mtmd.json",
+  "ask_node": 3,
+  "question": "What is libmtmd designed to replace?",
+  "edit_node": 2,
+  "edit_text": "## Pre-quantized models\n\nSee the list of pre-quantized model [here](../../docs/multimodal.md)\n\n## How it works and what is `mmproj`?\n\nMultimodal support in `llama.cpp` works by encoding images into embeddings using a separate model component, and then feeding these embeddings into the language model.\n\nThis approach keeps the multimodal components distinct from the core `libllama` library. Separating these allows for faster, independent development cycles. While many modern vision models are based on Vision Transformers (ViTs), their specific pre-processing and projection steps can vary significantly. Integrating this diverse complexity directly into `libllama` is currently challenging.\n\nConsequently, running a multimodal model typically requires two GGUF files:\n1.  The standard language model file.\n2.  A corresponding **multimodal projector (`mmproj`)** file, which handles the image encoding and projection.\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 4
+ },
+ {
+  "doc": "data/markdown/rpc.json",
+  "ask_node": 5,
+  "question": "What does the RPC server's local cache store?",
+  "edit_node": 4,
+  "edit_text": "### Main host\n\nOn the main host build `llama.cpp` with the backends for the local devices and add `-DGGML_RPC=ON` to the build options.\nFinally, when running `llama-cli` or `llama-server`, use the `--rpc` option to specify the host and port of each `ggml-rpc-server`:\n\n```bash\n$ llama-cli -hf ggml-org/gemma-3-1b-it-GGUF -ngl 99 --rpc 192.168.88.10:50052,192.168.88.11:50052\n```\n\nBy default, llama.cpp distributes model weights and the KV cache across all available devices -- both local and remote -- in proportion to each device's available memory.\nYou can override this behavior with the `--tensor-split` option and set custom proportions when splitting tensor data across devices.\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 1
+ },
+ {
+  "doc": "data/markdown/security.json",
+  "ask_node": 9,
+  "question": "How should you protect sensitive data when running a model?",
+  "edit_node": 7,
+  "edit_text": "### Untrusted models\nBe careful when running untrusted models. This classification includes models created by unknown developers or utilizing data obtained from unknown sources.\n\n*Always execute untrusted models within a secure, isolated environment such as a sandbox* (e.g., containers, virtual machines). This helps protect your system from potentially malicious code.\n\n> [!NOTE]\n> The trustworthiness of a model is not binary. You must always determine the proper level of caution depending on the specific model and how it matches your use case and risk tolerance.\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 2
+ },
+ {
+  "doc": "data/latex/kv_cache.json",
+  "ask_node": 6,
+  "question": "Why does the KV cache formula contain the factor 2?",
+  "edit_node": 10,
+  "edit_text": "\\begin{table}[h]\n\\centering\n\\begin{tabular}{rr}\nTokens & KV memory \\\\\n\\hline\n100 & 3.1 MiB \\\\\n1000 & 31.3 MiB \\\\\n2000 & 62.5 MiB \\\\\n\\end{tabular}\n\\caption{KV memory of Llama-3.2-1B in 16-bit precision.}\n\\end{table}\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 11
+ },
+ {
+  "doc": "data/latex/online_softmax.json",
+  "ask_node": 5,
+  "question": "In the proof of the merge lemma, what factor rescales the terms of block A?",
+  "edit_node": 2,
+  "edit_text": "\\begin{definition}\nFor a block $B$ of keys define the state $(m_B, \\ell_B, o_B)$ with $m_B = \\max_{j \\in B} s_j$, $\\ell_B = \\sum_{j \\in B} e^{s_j - m_B}$ and $o_B = \\sum_{j \\in B} e^{s_j - m_B} v_j$.\n\\end{definition}\n\n% \\section{An unfinished section that is commented out}\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 7
+ },
+ {
+  "doc": "data/latex/roofline.json",
+  "ask_node": 6,
+  "question": "According to the proof, how long does moving Q bytes take at least?",
+  "edit_node": 3,
+  "edit_text": "\\begin{definition}\nThe \\emph{arithmetic intensity} of a kernel is $I = F / Q$, where $F$ is the number of floating-point operations and $Q$ the number of bytes moved to and from memory.\n\\end{definition}\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 8
+ },
+ {
+  "doc": "data/latex/sample2e.json",
+  "ask_node": 2,
+  "question": "How is displayed text set apart from ordinary text?",
+  "edit_node": 1,
+  "edit_text": "\\section{Ordinary Text}      % Produces section heading.  Lower-level\n                             % sections are begun with similar\n                             % \\subsection and \\subsubsection commands.\n\nThe ends  of words and sentences are marked\n  by   spaces. It  doesn't matter how many\nspaces    you type; one is as good as 100.  The\nend of   a line counts as a space.\n\nOne   or more   blank lines denote the  end\nof  a paragraph.\n\nSince any number of consecutive spaces are treated\nlike a single one, the formatting of the input\nfile makes no difference to\n      \\LaTeX,                % The \\LaTeX command generates the LaTeX logo.\nbut it makes a difference to you.  When you use\n\\LaTeX, making your input file as easy to read\nas possible will be a great help as you write\nyour document and when you change it.  This sample\nfile shows how you can add comments to your own input\nfile.\n\nBecause printing is different from typewriting,\nthere are a number of things that you have to do\ndifferently when preparing an input file than if\nyou were just typing the document directly.\nQuotation marks like\n       ``this''\nhave to be handled specially, as do quotes within\nquotes:\n       ``\\,`this'            % \\, separates the double and single quote.\n        is what I just\n        wrote, not  `that'\\,''.\n\nDashes come in three sizes: an\n       intra-word\ndash, a medium dash for number ranges like\n       1--2,\nand a punctuation\n       dash---like\nthis.\n\nA sentence-ending space should be larger than the\nspace between words within a sentence.  You\nsometimes have to type special commands in\nconjunction with punctuation characters to get\nthis right, as in the following sentence.\n       Gnats, gnus, etc.\\ all  % `\\ ' makes an inter-word space.\n       begin with G\\@.         % \\@ marks end-of-sentence punctuation.\nYou should check the spaces after periods when\nreading your output to make sure you haven't\nforgotten any special cases.  Generating an\nellipsis\n       \\ldots\\               % `\\ ' is needed after `\\ldots' because TeX\n                             % ignores spaces after command names like \\ldots\n                             % made from \\ + letters.\n                             %\n                             % Note how a `%' character causes TeX to ignore\n                             % the end of the input line, so these blank lines\n                             % do not start a new paragraph.\n                             %\nwith the right spacing around the periods requires\na special command.\n\n\\LaTeX\\ interprets some common characters as\ncommands, so you must type special commands to\ngenerate them.  These characters include the\nfollowing:\n       \\$ \\& \\% \\# \\{ and \\}.\n\nIn printing, text is usually emphasized with an\n       \\emph{italic}\ntype style.\n\n\\begin{em}\n   A long segment of text can also be emphasized\n   in this way.  Text within such a segment can be\n   given \\emph{additional} emphasis.\n\\end{em}\n\nIt is sometimes necessary to prevent \\LaTeX\\ from\nbreaking a line where it might otherwise do so.\nThis may be at a space, as between the ``Mr.''\\ and\n``Jones'' in\n       ``Mr.~Jones'',        % ~ produces an unbreakable interword space.\nor within a word---especially when the word is a\nsymbol like\n       \\mbox{\\emph{itemnum}}\nthat makes little sense when hyphenated across\nlines.\n\nFootnotes\\footnote{This is an example of a footnote.}\npose no problem.\n\n\\LaTeX\\ is good at typesetting mathematical formulas\nlike\n       \\( x-3y + z = 7 \\)\nor\n       \\( a_{1} > x^{2n} + y^{2n} > x' \\)\nor\n       \\( \\ip{A}{B} = \\sum_{i} a_{i} b_{i} \\).\nThe spaces you type in a formula are\nignored.  Remember that a letter like\n       $x$                   % $ ... $  and  \\( ... \\)  are equivalent\nis a formula when it denotes a mathematical\nsymbol, and it should be typed as one.\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 1
+ },
+ {
+  "doc": "data/latex/tree_mask.json",
+  "ask_node": 10,
+  "question": "Why does the changed subtree receive attention weight zero?",
+  "edit_node": 7,
+  "edit_text": "\\subsection{Positions}\nEach child starts right after its parent's own tokens, so siblings share position numbers and every root-to-leaf path is numbered without gaps.\nThis sentence was added to test that editing one section leaves the others unchanged.\n\n",
+  "evict_node": 3
+ }
+]

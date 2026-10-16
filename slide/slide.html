@@ -1,0 +1,34 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@page { size: 1280px 720px; margin: 0 }
+html, body { width: 1280px; height: 720px; overflow: hidden; }
+body { margin: 0; font-family: 'DejaVu Sans', sans-serif; color: #1d2433; }
+h1 { margin: 18px 28px 2px; font-size: 26px; }
+.sub { margin: 0 28px 10px; color: #5b6475; font-size: 14px; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 28px; }
+.box { border: 2px solid #c9cdd6; border-radius: 10px; padding: 8px 12px; font-size: 12.5px; height: 278px; overflow: hidden; }
+.box h2 { font-size: 15px; margin: 0 0 6px; color: #1f4e99; }
+table { border-collapse: collapse; width: 100%; font-size: 11.5px; }
+td, th { border-bottom: 1px solid #e3e6ec; padding: 2px 4px; text-align: left; }
+th { color: #5b6475; }
+.big { font-size: 17px; font-weight: bold; color: #2e7d32; }
+ul { margin: 4px 0; padding-left: 18px; } li { margin: 2px 0; }
+</style></head><body>
+<h1>treekv: a tree-structured KV cache in llama.cpp</h1>
+<div class="sub">Markdown + LaTeX · Llama-3.2-1B-Instruct Q4_K_M · llama.cpp 10a60cf, CPU only · Pinaksh, Reehan, Ishaan</div>
+<div class="grid">
+<div class="box"><h2>Domain and method</h2><ul>
+<li><b>Markdown:</b> 5 llama.cpp docs; units = sections by heading level.</li>
+<li><b>LaTeX:</b> TeX Live sample2e + 4 math notes; units = sections, theorem/lemma/definition/proof/figure/table environments (pylatexenc). A proof becomes the child of the statement it proves.</li>
+<li>One sequence ID per leaf; every ancestor carries all its leaves' IDs, so llama.cpp's mask = the tree mask.</li>
+<li>Children start right after their parent: siblings share positions, every root-to-leaf path is gap-free.</li>
+<li>Subtrees under 32 tokens are merged (at most 254 leaves, keeping 2 sequences for the question and the layout check).</li>
+<li>Evict = <code>seq_rm(seq, p0, p1)</code> for the subtree's own sequence IDs.</li></ul></div>
+<div class="box"><h2>Tree statistics</h2><table><tr><th>doc</th><th>tokens</th><th>depth</th><th>seqs</th><th>leaf min/med/max</th><th>markup</th></tr><tr><td>md/embedding</td><td>690</td><td>4</td><td>7</td><td>47/92/162</td><td>17%</td></tr><tr><td>md/llguidance</td><td>922</td><td>3</td><td>5</td><td>94/123/261</td><td>31%</td></tr><tr><td>md/mtmd</td><td>1545</td><td>3</td><td>3</td><td>143/190/688</td><td>38%</td></tr><tr><td>md/rpc</td><td>1378</td><td>3</td><td>6</td><td>48/287/416</td><td>9%</td></tr><tr><td>md/security</td><td>1579</td><td>4</td><td>8</td><td>43/152/275</td><td>20%</td></tr><tr><td>la/kv_cache</td><td>802</td><td>4</td><td>6</td><td>36/79/115</td><td>30%</td></tr><tr><td>la/online_softmax</td><td>716</td><td>4</td><td>6</td><td>19/75/112</td><td>26%</td></tr><tr><td>la/roofline</td><td>487</td><td>4</td><td>5</td><td>45/61/90</td><td>25%</td></tr><tr><td>la/sample2e</td><td>1732</td><td>2</td><td>2</td><td>563/916/916</td><td>32%</td></tr><tr><td>la/tree_mask</td><td>587</td><td>5</td><td>5</td><td>33/67/107</td><td>28%</td></tr></table></div>
+<div class="box"><h2>Test results (3 runs each, all answers identical across runs)</h2>
+<div><span class="big">Test 1 (edit B): 10/10 PASS</span> &nbsp; <span class="big">Test 2 (evict C): 10/10 PASS</span></div>
+<ul><li>Answers about A identical after every edit and every eviction, in all runs. First-token logits: edit <b>0.0e+00</b>; evict up to 4.4e-01 when C precedes A (llama.cpp reuses C's freed cells for the question, so the CPU arithmetic order changes), <b>0.0e+00</b> with the cache layout held fixed.</li>
+<li>KV memory freed: <b>115.22 MiB</b> measured vs 115.19 MiB expected (evicted tokens × 32 KiB; +12 bytes/cell bookkeeping).</li>
+<li><b>Test 0:</b> two prompts in one batch = separate runs: <b>match</b> (12/26 tokens, logit diff 0.0e+00); changing sequence 1 moves sequence 0 by 0.0e+00.</li>
+<li>Finding: with 6-token prompts the runs differ by 0.66: CPU kernels tile 4 tokens at a time, so unaligned batches round differently; isolation stays exact.</li></ul></div>
+<div class="box"><h2>CPU run times (median of 3) · Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz, 4 threads</h2><table><tr><th>doc</th><th>tokens</th><th>prefill ms</th><th>edit B ms</th><th>full / edit</th><th>evict ms</th></tr><tr><td>md/embedding</td><td>690</td><td>10275</td><td>1033</td><td>9.9x</td><td>0.071</td></tr><tr><td>md/llguidance</td><td>922</td><td>17417</td><td>1997</td><td>8.7x</td><td>0.091</td></tr><tr><td>md/mtmd</td><td>1545</td><td>29990</td><td>3989</td><td>7.5x</td><td>0.178</td></tr><tr><td>md/rpc</td><td>1378</td><td>23976</td><td>3585</td><td>6.7x</td><td>0.083</td></tr><tr><td>md/security</td><td>1579</td><td>29326</td><td>2266</td><td>12.9x</td><td>0.287</td></tr><tr><td>la/kv_cache</td><td>802</td><td>14196</td><td>1966</td><td>7.2x</td><td>0.035</td></tr><tr><td>la/online_softmax</td><td>716</td><td>13720</td><td>2147</td><td>6.4x</td><td>0.078</td></tr><tr><td>la/roofline</td><td>487</td><td>8523</td><td>1321</td><td>6.5x</td><td>0.039</td></tr><tr><td>la/sample2e</td><td>1732</td><td>33062</td><td>17865</td><td>1.9x</td><td>0.223</td></tr><tr><td>la/tree_mask</td><td>587</td><td>10285</td><td>859</td><td>12.0x</td><td>0.077</td></tr></table></div>
+</div></body></html>

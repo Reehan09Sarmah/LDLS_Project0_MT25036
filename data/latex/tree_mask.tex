@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{amsmath,amsthm}
+\newtheorem{defn}{Definition}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\title{Tree-Structured Attention Masks}
+\begin{document}
+\maketitle
+
+\section{Documents as trees}
+A structured document is a tree: the root is the document, inner nodes are sections, and leaves are the smallest units a question may target.
+Reading the document in order visits the tree in pre-order.
+
+\begin{defn}
+In the \emph{tree mask}, a token $i$ may attend to a token $j$ if and only if $j$ is in an ancestor of the node of $i$, or $j$ is an earlier token of the node of $i$.
+\end{defn}
+
+\section{Sequence identifiers}
+\subsection{Assignment}
+Give every leaf its own sequence identifier and let every node carry the identifiers of all leaves below it.
+A token sees a cached token when they share a sequence identifier and the cached token's position is not larger.
+
+\begin{prop}\label{prop:equiv}
+With this assignment the sequence-identifier mask equals the tree mask.
+\end{prop}
+\begin{proof}
+Let $i$ lie in a node $u$ and use the identifier of a leaf below $u$.
+A cached token carries that identifier exactly when its node is on the path from the root to that leaf, which consists of the ancestors of $u$, $u$ itself and descendants of $u$.
+Descendants of $u$ start after $u$ ends, so the position condition removes them, and earlier tokens of $u$ and all ancestor tokens remain.
+\end{proof}
+
+\subsection{Positions}
+Each child starts right after its parent's own tokens, so siblings share position numbers and every root-to-leaf path is numbered without gaps.
+
+\section{Edits and evictions}
+\begin{thm}
+Changing or removing a subtree that is not on the path of a leaf $a$ does not change the output of a question asked in the sequence of $a$.
+\end{thm}
+\begin{proof}
+By Proposition~\ref{prop:equiv} the question sees only tokens on the path of $a$.
+Tokens of the changed subtree carry none of the identifiers on that path, so they receive attention weight zero, and the keys and values on the path were computed without them.
+\end{proof}
+
+\begin{figure}[h]
+\centering
+\fbox{root $\rightarrow$ section $\rightarrow$ \{leaf $a$, leaf $b$\}}
+\caption{Leaves $a$ and $b$ never see each other.}
+\end{figure}
+
+\end{document}

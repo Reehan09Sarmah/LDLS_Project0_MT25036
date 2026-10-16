@@ -1,0 +1,20 @@
+{
+ "alone": [
+  " Paris. The capital of France is Paris. The capital of France is Paris. The capital of France is Paris. The",
+  " \n    \"\"\"\n    This function generates the Fibonacci sequence up to the nth number.\n    \n    Args:\n    n (int"
+ ],
+ "first_logit_diff_together_vs_alone": [
+  0.46269989013671875,
+  0.6554937362670898
+ ],
+ "match": false,
+ "prompt_tokens": [
+  6,
+  5
+ ],
+ "seq0_logit_diff_when_seq1_text_changes": 0.0,
+ "together": [
+  " Paris. The Eiffel Tower is a famous landmark in Paris. The Eiffel Tower is a symbol of France",
+  " \n    \"\"\"\n    This function generates the first n Fibonacci numbers.\n    \n    Args:\n    n (int): The number"
+ ]
+}

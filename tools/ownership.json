@@ -1,0 +1,150 @@
+{
+ "Pinaksh_Engine": {
+  "member": "Pinaksh",
+  "role": "Engine: llama.cpp build (CPU), the shared C++ driver, the mask trace, Test 0",
+  "brief_items": "CPU build of llama.cpp and the model run; trace of the mask construction; Test 0 (two prompts); the shared C++ driver; keeping everything on the CPU",
+  "files": [
+   [
+    "driver/tree_driver.cpp",
+    "the shared driver: prefill, ask (scratch sequence), edit, evict, Test 0, logit comparison"
+   ],
+   [
+    "driver/CMakeLists.txt",
+    "builds tree-driver inside llama.cpp/examples/tree-driver/"
+   ],
+   [
+    "docs/mask_trace.md",
+    "how llama.cpp builds the mask from sequence IDs, with our real cell map"
+   ],
+   [
+    "results/test0.json",
+    "Test 0: two prompts together = separate runs"
+   ],
+   [
+    "results/test0_short_prompts.json",
+    "Test 0 with 6/5-token prompts: the 4-row kernel tiling effect"
+   ],
+   [
+    "results/example_run.json",
+    "first real run of the driver on the example document"
+   ],
+   [
+    "results/kv_debug.log",
+    "LLAMA_KV_CACHE_DEBUG=3 cache snapshots"
+   ],
+   [
+    "reports/Pinaksh.md",
+    "my personal section of the report"
+   ]
+  ],
+  "repo": "treekv-pinaksh"
+ },
+ "Reehan_Parser_Schema": {
+  "member": "Reehan",
+  "role": "Parser & schema: domains (Markdown + LaTeX), JSON schema + merge rules, parsers, 10 documents, tree statistics",
+  "brief_items": "choice of document types; JSON schema and merge rules; parsers and documents (each under 2,000 tokens)",
+  "files": [
+   [
+    "schema/SCHEMA.md",
+    "the JSON schema and merge rules"
+   ],
+   [
+    "parser/tree_schema.py",
+    "merge rules, tokenizing, sequence IDs, positions, rule checks, statistics"
+   ],
+   [
+    "parser/md_parser.py",
+    "Markdown -> tree"
+   ],
+   [
+    "parser/tex_parser.py",
+    "LaTeX -> tree (sections, theorem/proof/figure/table environments)"
+   ],
+   [
+    "parser/parse.py",
+    "documents -> JSON (picks the parser by file extension)"
+   ],
+   [
+    "parser/make_stats.py",
+    "tree-statistics table"
+   ],
+   [
+    "tests/test_parsers.py",
+    "edge-case tests for both parsers and the schema rules"
+   ],
+   [
+    "data/SOURCES.md",
+    "where the documents come from"
+   ],
+   [
+    "data/markdown/*",
+    "5 Markdown documents and their JSON"
+   ],
+   [
+    "data/latex/*",
+    "5 LaTeX documents and their JSON"
+   ],
+   [
+    "data/examples/*",
+    "made-up example documents"
+   ],
+   [
+    "results/stats.md",
+    "tree statistics for the slide"
+   ],
+   [
+    "reports/Reehan.md",
+    "my personal section of the report"
+   ]
+  ],
+  "repo": "treekv-reehan"
+ },
+ "Ishaan_Tests_Report": {
+  "member": "Ishaan",
+  "role": "Tests & report: batched trace, test cases and runner, timings, slide",
+  "brief_items": "trace of the `batched` example; running the driver on all documents; Tests 1 and 2; timings; the slide; the repository README",
+  "files": [
+   [
+    "docs/trace_batched.md",
+    "trace of llama.cpp's batched example"
+   ],
+   [
+    "tests/run_tests.py",
+    "Tests 1 and 2 on every document, repeated runs, medians"
+   ],
+   [
+    "tests/cases.json",
+    "A / B / C choices and questions for the 10 documents"
+   ],
+   [
+    "results/batched_debug.log",
+    "LLAMA_BATCH_DEBUG=1 log of the batched example"
+   ],
+   [
+    "results/test_results.md",
+    "test verdicts"
+   ],
+   [
+    "results/timings.md",
+    "CPU timings (median of 3)"
+   ],
+   [
+    "slide/*",
+    "the one slide"
+   ],
+   [
+    "reports/Ishaan.md",
+    "my personal section of the report"
+   ]
+  ],
+  "repo": "treekv-ishaan"
+ },
+ "shared": [
+  "README.md",
+  ".gitignore",
+  "requirements.txt",
+  "tools/*",
+  "results/README.md",
+  "reports/README_template.md"
+ ]
+}

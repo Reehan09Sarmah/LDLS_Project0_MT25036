@@ -1,0 +1,5 @@
+set(TARGET tree-driver)
+add_executable(${TARGET} tree_driver.cpp)
+target_include_directories(${TARGET} PRIVATE ${PROJECT_SOURCE_DIR}/vendor)
+target_link_libraries(${TARGET} PRIVATE llama ${CMAKE_THREAD_LIBS_INIT})
+target_compile_features(${TARGET} PRIVATE cxx_std_17)

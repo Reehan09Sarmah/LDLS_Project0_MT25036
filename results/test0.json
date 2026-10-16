@@ -1,0 +1,20 @@
+{
+ "alone": [
+  " Paris. The capital city of the country France is Paris.assistant:\n\nNo, the capital city of France is",
+  " if n >= 2 else 0\n\ndef fibonacci_sequence(n):\n    if n < 2:\n        return ["
+ ],
+ "first_logit_diff_together_vs_alone": [
+  0.0,
+  0.0
+ ],
+ "match": true,
+ "prompt_tokens": [
+  12,
+  26
+ ],
+ "seq0_logit_diff_when_seq1_text_changes": 0.0,
+ "together": [
+  " Paris. The capital city of the country France is Paris.assistant:\n\nNo, the capital city of France is",
+  " if n >= 2 else 0\n\ndef fibonacci_sequence(n):\n    if n < 2:\n        return ["
+ ]
+}
